@@ -1,0 +1,170 @@
+@startuml
+
+scale 1.00
+skinparam ClassBackgroundColor White
+skinparam ClassBorderColor Black
+skinparam ClassAttributeIconSize 0
+skinparam NoteBackgroundColor White
+skinparam NoteBorderColor Black
+skinparam ArrowColor Black
+skinparam Shadowing false
+hide Circle
+
+class Aluno {
+  - matricula: String
+  - nome: String
+  - CPF: String
+  - genero: char
+  - nascimento: Date
+  - entrada: Date
+  - filiacao: String
+  - CEP: String
+  - telefone: String
+  + Aluno(matricula: String, CPF: String, nome: String)
+  + getMatricula(): String
+  + getCPF(): String
+  + getNome(): String
+  + getGenero(): char
+  + getNascimento(): Date
+  + getEntrada(): Date
+  + getFiliacao(): String
+  + getCEP(): String
+  + getTelefone(): String
+  + setNome(nome: String): String
+  + setGenero(genero: char): char
+  + setFiliacao(filiacao: String): String
+  + setCEP(CEP: String): String
+  + setTelefone(telefone: String): String
+}
+
+class AlunoDAO {
+  + create(aluno: Aluno)
+  + update(aluno: Aluno)
+  + listAll(): Aluno[]
+  + listByMatricula(matricula: String): Aluno
+  + listByCPF(CPF: String): Aluno
+  + listByNome(nome: String): Aluno[]
+}
+
+class PDO {
+  - parameters: String
+  + PDO(parameters: String)
+  + exec(SQL: string)
+  + query(SQL: String): Object[]
+}
+
+class Turma {
+  - professor: Professor[]
+  - aluno: AlunoNota[]
+  - codigo: String
+  - periodo: Periodo
+  - disciplina: Disciplina
+  + Turma(codigo: String, periodo: Periodo)
+  + getCodigo(): String
+  + getPeriodo(): Periodo
+  + getAluno(): Aluno[]
+  + getProfessor(): Professor[]
+  + addAluno(aluno: Aluno)
+  + removeAluno(aluno: Aluno)
+  + addProfessor(professor: Professor)
+  + removeProfessor(professor: Professor)
+}
+
+class TurmaDAO {
+  + create(turma: Turma)
+  + update(turma: Turma)
+  + listAll(): Turma[]
+  + listByCodigo(codigo: String): Turma
+  + listByPeriodo(periodo: Periodo): Turma[]
+  + listByProfessor(professor: String): Turma[]
+  + listByAluno(aluno: String): Turma[]
+  + listByDisciplina(disciplina: String): Turma[]
+}
+
+class AlunoNota {
+  - nota: Real[]
+  - presenca: Real[]
+}
+
+class Professor {
+  - matricula: String
+  - nome: String
+  - CPF: String
+  - genero: char
+  - nascimento: Date
+  - CEP: String
+  - telefone: String
+  - entrada: Date
+  + Professor(matricula: String, CPF: String, nome: String)
+  + getMatricula(): String
+  + getCPF(): String
+  + getNome(): String
+  + getGenero(): char
+  + getNascimento(): Date
+  + getEntrada(): Date
+  + getCEP(): String
+  + getTelefone(): String
+  + setNome(nome: String): String
+  + setGenero(genero: char): char
+  + setCEP(CEP: String): String
+  + setTelefone(telefone: String): String
+}
+
+class ProfessorDAO {
+  + create(professor: Professor)
+  + update(professor: Professor)
+  + listAll(): Professor[]
+  + listByCPF(CPF: String): Professor
+  + listByNome(nome: String): Professor[]
+}
+
+class Periodo {
+  - ano: integer
+  - semestre: integer
+  - codigo: String
+  + Periodo(semestre: integer)
+  + getAno(): integer
+  + getSemestre(): integer
+}
+
+class PeriodoDAO {
+  + create(periodo: Periodo)
+  + listAll(): Periodo[]
+}
+
+class Disciplina {
+  - nome: String
+  - cargaHoraria: integer
+  - codigo: String
+  + Disciplina(nome: String, cargaHoraria: integer)
+  + getNome(): String
+  + getCargaHoraria(): integer
+  + setNome(nome: String): String
+  + setCargaHoraria(cargaHoraria: integer): integer
+}
+
+class DisciplinaDAO {
+  + create(disciplina: Disciplina)
+  + update(disciplina: Disciplina)
+  + listAll(): Disciplina[]
+  + listByCodigo(codigo: String): Disciplina
+  + listByNome(nome: String): Disciplina[]
+}
+
+AlunoDAO -- Aluno
+AlunoDAO -up- PDO
+Turma o-left- AlunoNota
+TurmaDAO -- Turma
+TurmaDAO -up- PDO
+AlunoNota -up-|> Aluno
+Turma o- Professor
+ProfessorDAO -- Professor
+ProfessorDAO -up- PDO
+PeriodoDAO -- Periodo
+Turma o-down- Periodo
+PeriodoDAO -up- PDO
+Turma o-down- Disciplina
+DisciplinaDAO -- Disciplina
+DisciplinaDAO -up- PDO
+
+@enduml
