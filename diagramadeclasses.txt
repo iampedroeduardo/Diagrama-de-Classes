@@ -120,13 +120,16 @@ class ProfessorDAO {
 
 class Periodo {
   - ano: integer
-  - semestre: integer
   - codigo: String
-  + Periodo(semestre: integer)
+  + Periodo()
   + getAno(): integer
-  + getSemestre(): integer
-}
+  }
 
+class PeriodoSemestral{
+  -semestre: integer
+  +PeriodoSemestral(semestre:integer)
+  +getSemestre(): integer
+  }
 class PeriodoDAO {
   + create(periodo: Periodo)
   + listAll(): Periodo[]
@@ -151,6 +154,17 @@ class DisciplinaDAO {
   + listByNome(nome: String): Disciplina[]
 }
 
+class Curso{
+  -nome: String
+  -codigo: integer
+  -disciplinas: Disciplina[]
+  +Curso (nome: String, disciplinas: Disciplina[])
+  +getNome(): String
+  +getDisciplinas(): Disciplina[]
+  +setNome(nome: String)
+  +addDisciplina(disciplina: Disciplina)
+  +removeDisciplina(disciplina: Disciplina)
+  }
 AlunoDAO -- Aluno
 AlunoDAO -up- PDO
 Turma o-left- AlunoNota
@@ -161,6 +175,7 @@ Turma o- Professor
 ProfessorDAO -- Professor
 ProfessorDAO -up- PDO
 PeriodoDAO -- Periodo
+PeriodoSemestral -right-|> Periodo
 Turma o-down- Periodo
 PeriodoDAO -up- PDO
 Turma o-down- Disciplina
