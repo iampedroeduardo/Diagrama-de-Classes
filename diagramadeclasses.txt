@@ -59,6 +59,7 @@ class Turma {
   - codigo: String
   - periodo: Periodo
   - disciplina: Disciplina
+  - horario: 
   + Turma(codigo: String, periodo: Periodo)
   + getCodigo(): String
   + getPeriodo(): Periodo
@@ -165,6 +166,16 @@ class Curso{
   +addDisciplina(disciplina: Disciplina)
   +removeDisciplina(disciplina: Disciplina)
   }
+
+class CursoDAO {
+  + create(disciplina: Disciplina)
+  + update(disciplina: Disciplina)
+  + listAll(): Disciplina[]
+  + listByCodigo(codigo: String): Curso
+  + listByNome(nome: String): Curso[]
+  + listByDisciplina(disciplina: String): Curso[]
+}
+
 AlunoDAO -- Aluno
 AlunoDAO -up- PDO
 Turma o-left- AlunoNota
@@ -181,5 +192,7 @@ PeriodoDAO -up- PDO
 Turma o-down- Disciplina
 DisciplinaDAO -- Disciplina
 DisciplinaDAO -up- PDO
-
+CursoDAO -- Curso
+CursoDAO -up- PDO
+Disciplina o-down- Curso
 @enduml
