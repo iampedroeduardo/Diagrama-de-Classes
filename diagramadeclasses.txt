@@ -59,16 +59,24 @@ class Turma {
   - codigo: String
   - periodo: Periodo
   - disciplina: Disciplina
-  - horario: 
+  - horarios: Horario[]
+  - planoEnsino: File
+  - topicosAula: TopicoAula[]
   + Turma(codigo: String, periodo: Periodo)
   + getCodigo(): String
   + getPeriodo(): Periodo
   + getAluno(): Aluno[]
   + getProfessor(): Professor[]
+  + getHorarios(): Horario[]
+  + getPlanoEnsino(): File
   + addAluno(aluno: Aluno)
   + removeAluno(aluno: Aluno)
   + addProfessor(professor: Professor)
   + removeProfessor(professor: Professor)
+  + addHorario(horario: Horario)
+  + removeHorario(horario: Horario)
+  + removeTopicoAula(topicoAula: TopicoAula)
+  + setPlanoEnsino(planoEnsino: File)r
 }
 
 class TurmaDAO {
@@ -84,7 +92,13 @@ class TurmaDAO {
 
 class AlunoNota {
   - nota: Real[]
-  - presenca: Real[]
+  - presenca: Boolean[]
+  + getNotas(): Real[]
+  + getPresencas(): Real[]
+  + addNota(nota: Real)
+  + addPresenca(presenca: Boolean)
+  + removeNota(nota: Real)
+  + removePresenca(presenca: Boolean)
 }
 
 class Professor {
@@ -147,6 +161,8 @@ class Disciplina {
   + setCargaHoraria(cargaHoraria: integer): integer
 }
 
+
+
 class DisciplinaDAO {
   + create(disciplina: Disciplina)
   + update(disciplina: Disciplina)
@@ -159,21 +175,95 @@ class Curso{
   -nome: String
   -codigo: integer
   -disciplinas: Disciplina[]
+  -coordenador: Professor
+  -planoCurso: File
+  -Tipo: String
   +Curso (nome: String, disciplinas: Disciplina[])
   +getNome(): String
+  +getTipo(): String
   +getDisciplinas(): Disciplina[]
+  +getCoordenador(): Professor
+  +getPlanoCurso(): File
   +setNome(nome: String)
+  +setTipo(tipo: String)
+  +setCoordenador(coordenador: Professor)
+  +setPlanoCurso(planoCurso: File)
   +addDisciplina(disciplina: Disciplina)
   +removeDisciplina(disciplina: Disciplina)
-  }
+}
 
 class CursoDAO {
-  + create(disciplina: Disciplina)
-  + update(disciplina: Disciplina)
-  + listAll(): Disciplina[]
+  + create(curso: Curso)
+  + update(curso: Curso)
+  + listAll(): Curso[]
   + listByCodigo(codigo: String): Curso
   + listByNome(nome: String): Curso[]
   + listByDisciplina(disciplina: String): Curso[]
+}
+
+class Horario{
+  - codigo: integer
+  - dia: integer
+  - inicio: Time
+  - final: Time
+  + Horario(dia:integer, inicio: Time, final: Time)
+  + getDia(): integer
+  + getInicio(): Time
+  + getFinal(): Time
+  + setDia(dia:integer)
+  + setInicio(inicio:Time)
+  + setFinal(final:Time)
+}
+
+class HorarioDAO{
+  + create(horario: Horario)
+  + update(horario: Horario)
+  + listAll(): Horario[]
+  + listByCodigo(codigo: String): Horario
+  + listByDia(dia: integer): Horario[]
+}
+
+class TopicoAula{
+  - codigo: integer
+  - nome: String
+  - descricao: String
+  - inicio: Date
+  - final: Date
+  + TopicoAula(nome: String, descricao: String, inicio: Date, final: Date)
+  + getNome(): String
+  + getDescricao(): String
+  + getInicio(): Date
+  + getFinal(): Date
+  + setNome(nome: String)
+  + setDescricao(descricao: String)
+  + setInicio(inicio: Date)
+  + setFinal(final: Date)
+}
+
+class TopicoAulaDAO{
+  + create(topicoAula: TopicoAula)
+  + update(topicoAula: TopicoAula)
+  + listAll(): TopicoAula[]
+  + listByCodigo(codigo: String): TopicoAula
+}
+
+class Campus{
+  - codigo: integer
+  - nome: String
+  - cursos: Curso[]
+  + getNome(): String
+  + setNome(nome: String)
+  + addCurso(curso: Curso)
+  + removeCurso(curso: Curso)
+}
+
+class CampusDAO{
+  + create(campus: Campus)
+  + update(campus: Campus)
+  + listAll(): Campus[]
+  + listByCodigo(codigo: String): Campus
+  + listByNome(nome: String): Campus
+  + listByCurso(curso: String): Campus[]
 }
 
 AlunoDAO -- Aluno
@@ -194,5 +284,15 @@ DisciplinaDAO -- Disciplina
 DisciplinaDAO -up- PDO
 CursoDAO -- Curso
 CursoDAO -up- PDO
-Disciplina o-down- Curso
+Curso o-down- Disciplina
+HorarioDAO -- Horario
+HorarioDAO -up- PDO
+Turma o-down- Horario
+Curso o-down- Professor
+TopicoAulaDAO -- TopicoAula
+TopicoAulaDAO -- PDO
+Turma o- TopicoAula
+Campus o- Curso
+Campus -- CampusDAO
+CampusDAO -- PDO
 @enduml
