@@ -1,0 +1,59 @@
+@startuml
+
+actor docente
+actor secretaria
+participant professorView
+participant professorController
+participant professor
+participant professorDAO
+participant PDO
+database MySQL
+
+professor -> secretaria: documentos
+secretaria -> professorView: GET /professor/inclui.html
+
+activate professorView
+
+professorView -->secretaria: html
+
+secretaria -> professorView: formulario(nome, endereco, ...)
+secretaria -> professorView: grava()
+
+professorView -> professorController: GravaProfessor(formulario)
+deactivate professorView
+activate professorController
+
+professorController -> professor: Professor(...)
+activate professor
+professor --> professorController: professor
+
+deactivate professor
+
+professorController -> professorDAO: create(professor)
+activate professorDAO
+
+professorDAO -> PDO: exec(...)
+activate PDO
+
+PDO -> MySQL: insert into professor ...
+activate MySQL
+
+MySQL --> PDO: dados
+
+deactivate MySQL
+
+PDO --> professorDAO: object[]
+
+deactivate PDO
+
+professorDAO --> professorController: professor
+deactivate professorDAO
+
+professorController -> professorView: refresh(professor)
+deactivate professorController
+activate professorView
+
+professorView --> secretaria: html
+deactivate professorView
+
+@enduml
