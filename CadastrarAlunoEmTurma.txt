@@ -1,0 +1,111 @@
+@startuml
+
+actor secretaria
+participant turmaView
+participant turmaController
+participant turma
+participant turmaDAO
+participant PDO
+database MySQL
+
+secretaria -> turmaView: GET /turma/cadastroAlunoTurma.html
+
+activate turmaView
+
+turmaView -->secretaria: html
+
+secretaria -> turmaView: formulario(nomeTurma)
+secretaria -> turmaView: pesquisa()
+
+turmaView -> turmaController: pesquisaTurma(formulario)
+deactivate turmaView
+activate turmaController
+
+turmaController -> turmaDAO: findByNome(turma)
+activate turmaDAO
+
+turmaDAO -> PDO: query(...)
+activate PDO
+
+PDO -> MySQL: select * from turma where ... 
+activate MySQL
+
+MySQL --> PDO: dados
+
+deactivate MySQL
+
+PDO --> turmaDAO: object[]
+
+deactivate PDO
+
+turmaDAO --> turmaController: turma
+deactivate turmaDAO
+
+turmaController -> turmaView: refresh(turma)
+deactivate turmaController
+activate turmaView
+
+turmaView --> secretaria: html
+deactivate turmaView
+
+activate secretaria
+
+secretaria -> turmaView: formulario(aluno)
+secretaria -> turmaView: grava()
+
+deactivate secretaria
+
+activate turmaView
+
+turmaView -> turmaController: adicionaAlunoTurma(aluno)
+
+deactivate turmaView
+
+activate turmaController
+
+turmaController -> turma: adicionaAluno(aluno)
+
+deactivate turmaController
+
+activate turma
+
+turma --> turmaController: turma
+
+deactivate turma
+
+activate turmaController
+
+turmaController -> turmaDAO: update(turma)
+
+deactivate turmaController
+
+activate turmaDAO
+
+turmaDAO -> PDO: query(...)
+
+deactivate turmaDAO
+
+activate PDO
+
+PDO -> MySQL: update turma set ... where ...
+activate MySQL
+
+MySQL --> PDO: dados
+
+deactivate MySQL
+
+PDO --> turmaDAO: object[]
+
+deactivate PDO
+
+turmaDAO --> turmaController: turma
+deactivate turmaDAO
+
+turmaController -> turmaView: refresh(turma)
+deactivate turmaController
+activate turmaView
+
+turmaView --> secretaria: html
+deactivate turmaView
+
+@enduml
