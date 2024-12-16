@@ -1,0 +1,59 @@
+@startuml
+
+actor estudante
+actor secretaria
+participant alunoView
+participant alunoController
+participant aluno
+participant alunoDAO
+participant PDO
+database MySQL
+
+estudante -> secretaria: documentos
+secretaria -> alunoView: GET /aluno/inclui.html
+
+activate alunoView
+
+alunoView -->secretaria: html
+
+secretaria -> alunoView: formulario(nome, endereco, ...)
+secretaria -> alunoView: grava()
+
+alunoView -> alunoController: GravaAluno(formulario)
+deactivate alunoView
+activate alunoController
+
+alunoController -> aluno: Aluno(...)
+activate aluno
+aluno --> alunoController: aluno
+
+deactivate aluno
+
+alunoController -> alunoDAO: create(aluno)
+activate alunoDAO
+
+alunoDAO -> PDO: exec(...)
+activate PDO
+
+PDO -> MySQL: insert into aluno ...
+activate MySQL
+
+MySQL --> PDO: dados
+
+deactivate MySQL
+
+PDO --> alunoDAO: object[]
+
+deactivate PDO
+
+alunoDAO --> alunoController: aluno
+deactivate alunoDAO
+
+alunoController -> alunoView: refresh(aluno)
+deactivate alunoController
+activate alunoView
+
+alunoView --> secretaria: html
+deactivate alunoView
+
+@enduml
